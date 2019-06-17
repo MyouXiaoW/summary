@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>delayWarning</title>
+  </head>
+  <body></body>
+
+  <script>
+    defer = () => {
+      let reslove;
+      let reject;
+      const p = new Promise((res = reslove, rej = reject) => {});
+
+      return {
+        p,
+        reslove,
+        reject
+      };
+    };
+
+    const getUserInfo = () => {
+      return new Promise((resolve, reject) => {
+        // reject('失败了');
+        setTimeout(() => {
+          resolve('成功了');
+        }, 10000);
+      });
+    };
+
+    let delayWarning = BackendAPI => () =>
+      new Promise((resolve, reject) => {
+        BackendAPI()
+          .then(value => {
+            resolve(value);
+          })
+          .catch(error => {
+            reject(error);
+          });
+
+        setTimeout(() => {
+          reject('网络连接错误');
+        }, 3000);
+      });
+
+    const getUserInfo1 = delayWarning(getUserInfo);
+
+    getUserInfo1()
+      .then(value => {
+        console.log(value);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  </script>
+</html>
